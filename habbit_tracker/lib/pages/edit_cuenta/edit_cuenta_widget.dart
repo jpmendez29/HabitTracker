@@ -470,7 +470,6 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
                 child: FFButtonWidget(
                   onPressed: () async {
-<<<<<<< HEAD
                     // Aquí puedes agregar validaciones adicionales antes de actualizar el perfil, si es necesario
                     if (userProfile != null) {
                       updateUserProfile(
@@ -485,28 +484,6 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                     context.pushNamed('login');
                   },
                   text: 'Confirmar Cambios',
-=======
-<<<<<<< HEAD
-                    context.pushNamed('login');
-                  },
-                  text: 'Eliminar Cuenta',
-=======
-                    // Aquí puedes agregar validaciones adicionales antes de actualizar el perfil, si es necesario
-                    if (userProfile != null) {
-                      updateUserProfile(
-                        userProfile,
-                        _model.textController1.text, // Nombre actualizado
-                        _model.textController2
-                            .text, // Nombre de usuario actualizado
-                        _model.textController3.text, // Biografía actualizada
-                      );
-                    }
-                    // Navega hacia atrás o redirige al usuario a la pantalla anterior si es necesario
-                    context.pushNamed('login');
-                  },
-                  text: 'Confirmar Cambios',
->>>>>>> 0a1ae39 (Update edit cuenta)
->>>>>>> 474b0868c4a302336952e4e5d6e43cf9e5c2caa6
                   options: FFButtonOptions(
                     width: 130.0,
                     height: 40.0,
