@@ -11,7 +11,7 @@ class HabitDataController extends GetxController {
     myHabits.add(newHabit);
   }
 
-  deleteHabit(Habit habit) {
-    myHabits.removeWhere((currentHabit) => currentHabit.name == habit.name);
+  deleteHabit(String name) {
+    myHabits.removeWhere((currentHabit) => currentHabit.name == name);
   }
 }

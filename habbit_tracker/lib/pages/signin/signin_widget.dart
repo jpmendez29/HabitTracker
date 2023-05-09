@@ -2,10 +2,12 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'signin_model.dart';
+import 'signin_controller.dart';
 export 'signin_model.dart';
+import 'package:get/get.dart';
+import 'package:habbit_tracker/pages/login/login_widget.dart';
+import 'dart:developer';
 
 class SigninWidget extends StatefulWidget {
   const SigninWidget({Key? key}) : super(key: key);
@@ -15,6 +17,8 @@ class SigninWidget extends StatefulWidget {
 }
 
 class _SigninWidgetState extends State<SigninWidget> {
+  late signin_controller usc = Get.find<signin_controller>();
+
   late SigninModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -177,7 +181,7 @@ class _SigninWidgetState extends State<SigninWidget> {
                       controller: _model.textController1,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelText: 'Your email address',
+                        labelText: 'Your username',
                         labelStyle: FlutterFlowTheme.of(context).bodySmall,
                         hintStyle: FlutterFlowTheme.of(context).bodySmall,
                         enabledBorder: OutlineInputBorder(
@@ -305,16 +309,50 @@ class _SigninWidgetState extends State<SigninWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                 child: FFButtonWidget(
                   onPressed: () async {
-                    context.pushNamed(
-                      'login',
-                      extra: <String, dynamic>{
-                        kTransitionInfoKey: TransitionInfo(
-                          hasTransition: true,
-                          transitionType: PageTransitionType.rightToLeft,
-                          duration: Duration(milliseconds: 350),
+                    String pasw = _model.textController2.text;
+                    String usr = _model.textController1.text;
+                    if (usc.validatepasw(usr, pasw) &&
+                        pasw.isNotEmpty &&
+                        usr.isNotEmpty) {
+                      log(usc.usr());
+                      await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                              content: Text("Cuenta creada"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context), // passing false
+                                  child: Text('ok'),
+                                )
+                              ]);
+                        },
+                      );
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginWidget(),
                         ),
-                      },
-                    );
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                              content: Text(
+                                  "Error al crear la cuenta, verificar los datos e intente nuevamente"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context), // passing false
+                                  child: Text('ok'),
+                                )
+                              ]);
+                        },
+                      );
+                    }
+                    ;
                   },
                   text: 'Sign up',
                   options: FFButtonOptions(

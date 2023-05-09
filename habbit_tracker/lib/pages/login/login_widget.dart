@@ -2,10 +2,13 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'login_model.dart';
 export 'login_model.dart';
+import 'package:get/get.dart';
+import 'package:habbit_tracker/pages/login/login_controller.dart';
+import 'package:habbit_tracker/pages/signin/signin_controller.dart';
+import 'package:habbit_tracker/data/login/Local_preference_login.dart';
+import 'package:habbit_tracker/pages/home_page/home_page_widget.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({Key? key}) : super(key: key);
@@ -16,6 +19,10 @@ class LoginWidget extends StatefulWidget {
 
 class _LoginWidgetState extends State<LoginWidget> {
   late LoginModel _model;
+
+  final login_controller logincontroller = Get.put(login_controller());
+  final signin_controller signincontroller = Get.put(signin_controller());
+  final prefs_controller prefscontroller = Get.put(prefs_controller());
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -184,7 +191,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                         controller: _model.textController1,
                         obscureText: false,
                         decoration: InputDecoration(
-                          labelText: 'Your email address',
+                          labelText: 'Your username',
                           labelStyle: FlutterFlowTheme.of(context).bodySmall,
                           hintStyle: FlutterFlowTheme.of(context).bodySmall,
                           enabledBorder: OutlineInputBorder(
@@ -313,16 +320,51 @@ class _LoginWidgetState extends State<LoginWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      context.pushNamed(
-                        'HomePage',
-                        extra: <String, dynamic>{
-                          kTransitionInfoKey: TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 350),
+                      String pasw = _model.textController2.text;
+                      String usr = _model.textController1.text;
+                      if (pasw.isNotEmpty &&
+                          usr.isNotEmpty &&
+                          signincontroller.exist(usr, pasw)) {
+                        await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                content: Text("Sesion iniciada correctamente"),
+                                actions: [
+                                  TextButton(
+                                    key: Key('Textdialog'),
+                                    onPressed: () =>
+                                        Navigator.pop(context), // passing false
+                                    child: Text('ok'),
+                                  )
+                                ]);
+                          },
+                        );
+                        prefscontroller.storeUserInfo(usr, pasw);
+
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePageWidget(),
                           ),
-                        },
-                      );
+                        );
+                      } else {
+                        await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                content: Text(
+                                    "Error al inicir sesion,verificar los datos e intente nuevamente"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context), // passing false
+                                    child: Text('ok'),
+                                  )
+                                ]);
+                          },
+                        );
+                      }
                     },
                     text: 'Login',
                     options: FFButtonOptions(

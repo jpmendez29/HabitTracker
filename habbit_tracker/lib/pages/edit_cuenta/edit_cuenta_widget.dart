@@ -6,6 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'edit_cuenta_model.dart';
 export 'edit_cuenta_model.dart';
+import 'package:habbit_tracker/pages/signin/signin_controller.dart';
+import 'package:habbit_tracker/pages/signin/usuarios_model.dart';
+import 'package:get/get.dart';
+import 'package:habbit_tracker/pages/perfil/perfil_controller.dart';
 
 class EditCuentaWidget extends StatefulWidget {
   const EditCuentaWidget({Key? key}) : super(key: key);
@@ -16,7 +20,7 @@ class EditCuentaWidget extends StatefulWidget {
 
 class _EditCuentaWidgetState extends State<EditCuentaWidget> {
   late EditCuentaModel _model;
-
+  final signin_controller _signinController = Get.find();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
 
@@ -40,8 +44,18 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
     super.dispose();
   }
 
+  void updateUserProfile(UserProfile userProfile, String newName,
+      String newUsername, String newBio) {
+    // Actualiza el UserProfile con la nueva información
+    // Aquí también puedes actualizar la base de datos, el almacenamiento local u otro lugar donde esté almacenada la información del usuario
+  }
   @override
   Widget build(BuildContext context) {
+    if (_signinController.currentUser == null) {
+      return Center(child: Text('No hay usuario autenticado'));
+    }
+    final usuario_model currentUser = _signinController.currentUser!;
+    final UserProfile? userProfile = currentUser.userProfile;
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
       child: Scaffold(
@@ -124,7 +138,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                       autofocus: true,
                       obscureText: false,
                       decoration: InputDecoration(
-                        hintText: 'Abby Toss',
+                        hintText: userProfile?.name ?? 'Nombre no disponible',
                         hintStyle:
                             FlutterFlowTheme.of(context).bodySmall.override(
                                   fontFamily: 'Nunito',
@@ -208,7 +222,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                       autofocus: true,
                       obscureText: false,
                       decoration: InputDecoration(
-                        hintText: '@abby_la_sapa  ',
+                        hintText: currentUser.user,
                         hintStyle:
                             FlutterFlowTheme.of(context).bodySmall.override(
                                   fontFamily: 'Nunito',
@@ -291,8 +305,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                       autofocus: true,
                       obscureText: false,
                       decoration: InputDecoration(
-                        hintText:
-                            'Actualmente soy una estudiante de diseño digital, me desempeño en el manejo de herramientas como Adobe Photoshop, Adobe Illustrator y After Effects.\n',
+                        hintText: userProfile?.bio ?? 'Biografía no disponible',
                         hintStyle:
                             FlutterFlowTheme.of(context).bodySmall.override(
                                   fontFamily: 'Nunito',
@@ -366,74 +379,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                           fontWeight: FontWeight.w600,
                           lineHeight: 1.0,
                         ),
-                  ),
-                  Container(
-                    width: 200.0,
-                    height: 20.0,
-                    decoration: BoxDecoration(),
-                    child: TextFormField(
-                      controller: _model.textController4,
-                      autofocus: true,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        hintText: 'Abbytoss@gmail.com',
-                        hintStyle:
-                            FlutterFlowTheme.of(context).bodySmall.override(
-                                  fontFamily: 'Nunito',
-                                  color: Color(0xFF3C7E5B),
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        errorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedErrorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Nunito',
-                            color: Color(0xFF3C7E5B),
-                          ),
-                      maxLines: null,
-                      validator:
-                          _model.textController4Validator.asValidator(context),
-                    ),
-                  ),
+                  )
                 ],
               ),
               Row(
@@ -524,9 +470,20 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
                 child: FFButtonWidget(
                   onPressed: () async {
-                    context.pushNamed('login');
+                    // Aquí puedes agregar validaciones adicionales antes de actualizar el perfil, si es necesario
+                    if (userProfile != null) {
+                      updateUserProfile(
+                        userProfile,
+                        _model.textController1.text, // Nombre actualizado
+                        _model.textController2
+                            .text, // Nombre de usuario actualizado
+                        _model.textController3.text, // Biografía actualizada
+                      );
+                    }
+                    // Navega hacia atrás o redirige al usuario a la pantalla anterior si es necesario
+                    Navigator.pop(context);
                   },
-                  text: 'Eliminar Cuenta',
+                  text: 'Confirmar Cambios',
                   options: FFButtonOptions(
                     width: 130.0,
                     height: 40.0,

@@ -9,5 +9,7 @@ class addHabit {
     dataController.addHabit(newHabit);
   }
 
-  deleteHabit() {}
+  deleteHabit(String name) {
+    dataController.deleteHabit(name);
+  }
 }

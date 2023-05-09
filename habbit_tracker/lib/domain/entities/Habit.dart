@@ -15,7 +15,7 @@ class Habit {
       required this.icon,
       required this.reminders,
       required this.initDate,
-      this.progress = 0.0,
+      this.progress = 0.5,
       required this.goal,
       required this.intervalOfDays,
       this.goalDayCompleted = false});
