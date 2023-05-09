@@ -1,23 +1,18 @@
-import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import 'package:habbit_tracker/pages/login/login_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:habbit_tracker/pages/perfil/perfil_controller.dart';
+import 'dart:developer';
 
-class usuario_model {
-  late String user;
-  late String pasw;
-  UserProfile? userProfile;
+import 'package:get/get.dart';
+import 'package:get/state_manager.dart';
 
-  usuario_model({
-    required this.user,
-    required this.pasw,
-    this.userProfile,
-  });
+class login_controller extends GetxController {
+  String usrerstring(user, pas) {
+    return ("usuario: $user contraseña: $pas");
+  }
 
-  // Métodos adicionales para la actualización y eliminación del perfil del usuario.
+  bool validateusr(usr, pasw, us1, pasw1) {
+    if (pasw == pasw1 && usr == us1) {
+      log(usrerstring(usr, pasw));
+      return true;
+    }
+    return false;
+  }
 }

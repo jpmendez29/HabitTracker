@@ -481,7 +481,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                       );
                     }
                     // Navega hacia atrás o redirige al usuario a la pantalla anterior si es necesario
-                    context.pushNamed('login');
+                    Navigator.pop(context);
                   },
                   text: 'Confirmar Cambios',
                   options: FFButtonOptions(
