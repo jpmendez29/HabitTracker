@@ -810,6 +810,7 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                         onPressed: () async {
                           String text = _textEditingController.text;
                           if (text.isNotEmpty && text.trim().isNotEmpty) {
+                            habitController.setName(text);
                             habitController.saveHabit();
                             habitController.resetToInitialStates();
                             context.pushNamed(

@@ -1,12 +1,12 @@
+import 'package:get/get.dart';
+import 'package:habbit_tracker/pages/home_page/controllers/homePageController.dart';
+
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:provider/provider.dart';
 import 'home_page_model.dart';
 export 'home_page_model.dart';
 
@@ -19,7 +19,16 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
-
+  List<String> days = [
+    "Lunes",
+    "Martes",
+    "Miercoles",
+    "Jueves",
+    "Viernes",
+    "Sabado",
+    "Domingo"
+  ];
+  HomePageController homeController = Get.find();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
 
@@ -27,6 +36,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
+    homeController.setListByDay();
   }
 
   @override
@@ -85,7 +95,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         size: 30.0,
                       ),
                       onPressed: () {
-                        print('IconButton pressed ...');
+                        bool isShowing = homeController.showIcon.value;
+                        homeController.showIcon.value = !isShowing;
                       },
                     ),
                   ],
@@ -231,24 +242,24 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       size: 22.0,
                     ),
                     onPressed: () {
-                      print('IconButton pressed ...');
+                      homeController.moveBackwardDay();
                     },
                   ),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(37.5, 0.0, 37.5, 0.0),
-                  child: Text(
-                    'Lunes',
-                    textAlign: TextAlign.center,
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Nunito',
-                          color: Color(0xFF3C7E5B),
-                          fontSize: 22.0,
-                          letterSpacing: 0.23,
-                          fontWeight: FontWeight.bold,
-                          lineHeight: 0.73,
-                        ),
-                  ),
+                  child: Obx(() => Text(
+                        days[homeController.counterIndex.value],
+                        textAlign: TextAlign.center,
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Nunito',
+                              color: Color(0xFF3C7E5B),
+                              fontSize: 22.0,
+                              letterSpacing: 0.23,
+                              fontWeight: FontWeight.bold,
+                              lineHeight: 0.73,
+                            ),
+                      )),
                 ),
                 Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
@@ -262,7 +273,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       size: 22.0,
                     ),
                     onPressed: () {
-                      print('IconButton pressed ...');
+                      homeController.moveForwardDay();
                     },
                   ),
                 ),
@@ -281,109 +292,24 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               ),
             ),
             Expanded(
-              child: GridView(
-                padding: EdgeInsets.zero,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 0.0,
-                  mainAxisSpacing: 0.0,
-                  childAspectRatio: 1.0,
-                ),
-                scrollDirection: Axis.vertical,
-                children: [
-                  CircularPercentIndicator(
-                    percent: 0.75,
-                    radius: 60.0,
-                    lineWidth: 16.0,
-                    animation: true,
-                    progressColor: Color(0xFFFFB87E),
-                    backgroundColor: Color(0xFFFEDCC1),
-                    center: Text(
-                      '50%',
-                      textAlign: TextAlign.center,
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Poppins',
-                            color: FlutterFlowTheme.of(context).primary,
-                          ),
+              child: Obx(() => GridView.builder(
+                    padding: EdgeInsets.zero,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 0.0,
+                      mainAxisSpacing: 0.0,
+                      childAspectRatio: 1.0,
                     ),
-                  ),
-                  CircularPercentIndicator(
-                    percent: 0.6,
-                    radius: 60.0,
-                    lineWidth: 16.0,
-                    animation: true,
-                    progressColor: Color(0xFFF07D6D),
-                    backgroundColor: Color(0xFFFCC8C1),
-                    center: Text(
-                      '50%',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Poppins',
-                            color: FlutterFlowTheme.of(context).primary,
-                          ),
-                    ),
-                  ),
-                  CircularPercentIndicator(
-                    percent: 0.0,
-                    radius: 60.0,
-                    lineWidth: 16.0,
-                    animation: true,
-                    progressColor: Color(0xFF659C83),
-                    backgroundColor: Color(0xFFADDBC7),
-                    center: Text(
-                      '50%',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Poppins',
-                            color: FlutterFlowTheme.of(context).primary,
-                          ),
-                    ),
-                  ),
-                  CircularPercentIndicator(
-                    percent: 0.25,
-                    radius: 60.0,
-                    lineWidth: 16.0,
-                    animation: true,
-                    progressColor: Color(0xFFCF8DE7),
-                    backgroundColor: Color(0xFFE6CEEF),
-                    center: Text(
-                      '50%',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Poppins',
-                            color: FlutterFlowTheme.of(context).primary,
-                          ),
-                    ),
-                  ),
-                  CircularPercentIndicator(
-                    percent: 0.5,
-                    radius: 60.0,
-                    lineWidth: 24.0,
-                    animation: true,
-                    progressColor: FlutterFlowTheme.of(context).primary,
-                    backgroundColor: FlutterFlowTheme.of(context).accent4,
-                    center: Text(
-                      '50%',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Poppins',
-                            color: FlutterFlowTheme.of(context).primary,
-                          ),
-                    ),
-                  ),
-                  CircularPercentIndicator(
-                    percent: 0.5,
-                    radius: 60.0,
-                    lineWidth: 24.0,
-                    animation: true,
-                    progressColor: FlutterFlowTheme.of(context).primary,
-                    backgroundColor: FlutterFlowTheme.of(context).accent4,
-                    center: Text(
-                      '50%',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Poppins',
-                            color: FlutterFlowTheme.of(context).primary,
-                          ),
-                    ),
-                  ),
-                ],
-              ),
+                    itemCount: homeController
+                        .showingList[homeController.counterIndex.value].length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final habit = homeController
+                              .showingList[homeController.counterIndex.value]
+                          [index];
+                      return homeController.buildCircularPercentIndicator(
+                          habit, context);
+                    },
+                  )),
             ),
             Align(
               alignment: AlignmentDirectional(0.0, 0.0),
@@ -421,3 +347,22 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     );
   }
 }
+
+  // Widget buildCircularPercentIndicator(Habit habit,context) {
+  //   return CircularPercentIndicator(
+  //     percent: dato.percent,
+  //     radius: 60.0,
+  //     lineWidth: 16.0,
+  //     animation: true,
+  //     progressColor: dato.progressColor,
+  //     backgroundColor: dato.backgroundColor,
+  //     center: Text(
+  //       dato.text,
+  //       style: TextStyle(
+  //         fontFamily: 'Poppins',
+  //         color: FlutterFlowTheme.of(context).primary,
+  //       ),
+  //     ),
+  //   );
+  // }
+
