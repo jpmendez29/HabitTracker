@@ -17,6 +17,8 @@ final  HabitDataController habitDataController = Get.find<HabitDataController>()
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 Future<void> initNotifications() async{ 
+
+  
   
   const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('abby_toss');
 
