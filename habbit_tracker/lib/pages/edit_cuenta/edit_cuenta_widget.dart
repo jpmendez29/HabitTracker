@@ -43,10 +43,12 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
     _unfocusNode.dispose();
     super.dispose();
   }
-  void updateUserProfile(UserProfile userProfile, String newName, String newUsername, String newBio) {
-  // Actualiza el UserProfile con la nueva información
-  // Aquí también puedes actualizar la base de datos, el almacenamiento local u otro lugar donde esté almacenada la información del usuario
-}
+
+  void updateUserProfile(UserProfile userProfile, String newName,
+      String newUsername, String newBio) {
+    // Actualiza el UserProfile con la nueva información
+    // Aquí también puedes actualizar la base de datos, el almacenamiento local u otro lugar donde esté almacenada la información del usuario
+  }
   @override
   Widget build(BuildContext context) {
     if (_signinController.currentUser == null) {
@@ -465,41 +467,42 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                 ],
               ),
               Padding(
-  padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
-  child: FFButtonWidget(
-    onPressed: () async {
-      // Aquí puedes agregar validaciones adicionales antes de actualizar el perfil, si es necesario
-      if (userProfile != null){
-      updateUserProfile(
-        userProfile,
-        _model.textController1.text, // Nombre actualizado
-        _model.textController2.text, // Nombre de usuario actualizado
-        _model.textController3.text, // Biografía actualizada
-      );
-      }
-      // Navega hacia atrás o redirige al usuario a la pantalla anterior si es necesario
-      context.pushNamed('login');
-    },
-    text: 'Confirmar Cambios',
-    options: FFButtonOptions(
-      width: 130.0,
-      height: 40.0,
-      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-      iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-      color: Color(0xFF3C7E5B),
-      textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-            fontFamily: 'Poppins',
-            color: Colors.white,
-          ),
-      borderSide: BorderSide(
-        color: Colors.transparent,
-        width: 1.0,
-      ),
-      borderRadius: BorderRadius.circular(8.0),
-    ),
-  ),
-),
-,
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
+                child: FFButtonWidget(
+                  onPressed: () async {
+                    // Aquí puedes agregar validaciones adicionales antes de actualizar el perfil, si es necesario
+                    if (userProfile != null) {
+                      updateUserProfile(
+                        userProfile,
+                        _model.textController1.text, // Nombre actualizado
+                        _model.textController2
+                            .text, // Nombre de usuario actualizado
+                        _model.textController3.text, // Biografía actualizada
+                      );
+                    }
+                    // Navega hacia atrás o redirige al usuario a la pantalla anterior si es necesario
+                    context.pushNamed('login');
+                  },
+                  text: 'Confirmar Cambios',
+                  options: FFButtonOptions(
+                    width: 130.0,
+                    height: 40.0,
+                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: Color(0xFF3C7E5B),
+                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                          fontFamily: 'Poppins',
+                          color: Colors.white,
+                        ),
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
