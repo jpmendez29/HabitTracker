@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:habbit_tracker/data/habitDataController.dart';
 import 'package:habbit_tracker/domain/use_cases/addHabit.dart';
 import 'package:habbit_tracker/pages/add_habit/controllers/habitController.dart';
+import 'package:habbit_tracker/pages/home_page/controllers/homePageController.dart';
+import 'package:habbit_tracker/services/notification.services.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
@@ -13,7 +15,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterFlowTheme.initialize();

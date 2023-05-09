@@ -81,8 +81,8 @@ Future<void> scheduleWeeklyNotification(Habit habit) async {
 
     flutterLocalNotificationsPlugin.zonedSchedule(
     2,
-    '${habit.name}, hola',
-    'Aun no realizas el habito de ${habit.name}, realizalo ahora para cumplir la meta',
+    '${habit.name}',
+    'Hola, Aun no realizas el habito ${habit.name}, realizalo ahora para cumplir la meta',
     scheduledDate,
     notificationDetails,
     androidAllowWhileIdle: true,

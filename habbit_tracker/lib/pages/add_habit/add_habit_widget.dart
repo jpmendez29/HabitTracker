@@ -2,6 +2,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:get/get.dart';
 import 'package:habbit_tracker/pages/add_habit/controllers/habitController.dart';
+import '../../services/notification.services.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -813,6 +814,7 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                             habitController.setName(text);
                             habitController.saveHabit();
                             habitController.resetToInitialStates();
+                            mostrarNotificacion();
                             context.pushNamed(
                               'HomePage',
                               extra: <String, dynamic>{
