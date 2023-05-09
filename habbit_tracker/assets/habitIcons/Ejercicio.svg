@@ -1,0 +1,15 @@
+<svg width="80" height="64" viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="29.6941" y="22.266" width="27.2859" height="5.65311" transform="rotate(30 29.6941 22.266)" stroke="#3C7E5B" stroke-width="3"/>
+<rect x="67.1423" y="31.754" width="27.2859" height="8.7435" rx="1.5" transform="rotate(120 67.1423 31.754)" stroke="#3C7E5B" stroke-width="3"/>
+<rect x="71.9376" y="39.5184" width="18.6328" height="6.88927" rx="1.5" transform="rotate(120 71.9376 39.5184)" stroke="#3C7E5B" stroke-width="3"/>
+<mask id="path-4-inside-1_46_1322" fill="white">
+<rect x="75.6241" y="44.9105" width="12.9797" height="7.23127" rx="2" transform="rotate(120 75.6241 44.9105)"/>
+</mask>
+<rect x="75.6241" y="44.9105" width="12.9797" height="7.23127" rx="2" transform="rotate(120 75.6241 44.9105)" stroke="#3C7E5B" stroke-width="6" mask="url(#path-4-inside-1_46_1322)"/>
+<mask id="path-5-inside-2_46_1322" fill="white">
+<rect x="17.0056" y="11.0672" width="12.9797" height="7.14666" rx="2" transform="rotate(120 17.0056 11.0672)"/>
+</mask>
+<rect x="17.0056" y="11.0672" width="12.9797" height="7.14666" rx="2" transform="rotate(120 17.0056 11.0672)" stroke="#3C7E5B" stroke-width="6" mask="url(#path-5-inside-2_46_1322)"/>
+<rect x="23.2278" y="11.3958" width="18.6328" height="6.88927" rx="1.5" transform="rotate(120 23.2278 11.3958)" stroke="#3C7E5B" stroke-width="3"/>
+<rect x="33.9555" y="12.5935" width="27.2859" height="8.7435" rx="1.5" transform="rotate(120 33.9555 12.5935)" stroke="#3C7E5B" stroke-width="3"/>
+</svg>

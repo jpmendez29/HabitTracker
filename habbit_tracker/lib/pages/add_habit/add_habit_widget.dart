@@ -1,12 +1,17 @@
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+import 'package:get/get.dart';
+import 'package:habbit_tracker/pages/add_habit/controllers/habitController.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'add_habit_model.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:habbit_tracker/utils/HabitIcons.dart';
 export 'add_habit_model.dart';
 
 class AddHabitWidget extends StatefulWidget {
@@ -17,8 +22,74 @@ class AddHabitWidget extends StatefulWidget {
 }
 
 class _AddHabitWidgetState extends State<AddHabitWidget> {
-  late AddHabitModel _model;
+  var selectedTime;
+  TextEditingController _textEditingController = TextEditingController();
+  Future<void> _showTimePicker() async {
+    DateTime now = DateTime.now();
+    final pickedTime = await showRoundedTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(now),
+      locale: Locale(
+          "en"), // Cambia el idioma del selector de tiempo si lo necesitas
+      borderRadius: 16,
+      theme: ThemeData(primarySwatch: Colors.green),
+    );
 
+    if (pickedTime != null) {
+      selectedTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+      print(pickedTime.hour);
+      print(DateFormat.jm().format(selectedTime));
+      habitController.setNewReminder(selectedTime);
+    }
+  }
+
+  void showCustomDialog(BuildContext context) {
+    try {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Seleccionar icono'),
+            content: Container(
+              width: double.maxFinite,
+              child: GridView.builder(
+                shrinkWrap: true,
+                itemCount: HabitIcons.icons.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // Número de iconos por fila
+                  mainAxisSpacing: 8.0, // Espacio vertical entre filas
+                  crossAxisSpacing: 8.0, // Espacio horizontal entre iconos
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context, HabitIcons.icons[index]);
+                    },
+                    child: SvgPicture.asset(HabitIcons.icons[index]),
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ).then((selectedIcon) {
+        if (selectedIcon != null) {
+          habitController.setCustomIcon(selectedIcon);
+        }
+      });
+    } catch (e) {
+      print("Error $e");
+    }
+  }
+
+  late AddHabitModel _model;
+  HabitController habitController = Get.find();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
 
@@ -35,7 +106,7 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
   @override
   void dispose() {
     _model.dispose();
-
+    habitController.resetToInitialStates();
     _unfocusNode.dispose();
     super.dispose();
   }
@@ -126,7 +197,7 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                         child: Container(
                           width: 270.0,
                           child: TextFormField(
-                            controller: _model.textController1,
+                            controller: _textEditingController,
                             autofocus: true,
                             obscureText: false,
                             decoration: InputDecoration(
@@ -161,8 +232,12 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                               ),
                             ),
                             style: FlutterFlowTheme.of(context).bodyMedium,
-                            validator: _model.textController1Validator
-                                .asValidator(context),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Este campo es obligatorio';
+                              }
+                              return null;
+                            },
                           ),
                         ),
                       ),
@@ -198,22 +273,29 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                           ),
                         ),
                         Align(
-                          alignment: AlignmentDirectional(-0.8, -0.4),
-                          child: FlutterFlowIconButton(
-                            borderColor: Color(0xFF69B884),
-                            borderRadius: 100.0,
-                            borderWidth: 10.0,
-                            buttonSize: 95.0,
-                            icon: FaIcon(
-                              FontAwesomeIcons.carrot,
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              size: 50.0,
-                            ),
-                            onPressed: () {
-                              print('IconButton pressed ...');
-                            },
-                          ),
-                        ),
+                            alignment: AlignmentDirectional(-0.8, -0.4),
+                            child: Obx(
+                              () => IconButton(
+                                icon: SvgPicture.asset(
+                                  '${habitController.customIcon.value}',
+                                ),
+                                onPressed: () {
+                                  try {
+                                    showCustomDialog(context);
+                                  } catch (e) {
+                                    print("Error $e");
+                                  }
+                                },
+                                color: Color(0xFF69B884),
+                                iconSize: 80.0,
+                                padding: EdgeInsets.all(10.0),
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                tooltip: 'Seleccionar icono',
+                              ),
+                            )),
                       ],
                     ),
                     Padding(
@@ -242,20 +324,50 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                           ),
                           Align(
                             alignment: AlignmentDirectional(-0.8, -0.4),
-                            child: FlutterFlowIconButton(
-                              borderColor: Color(0xFF69B884),
-                              borderRadius: 100.0,
-                              borderWidth: 10.0,
-                              buttonSize: 95.0,
-                              icon: FaIcon(
-                                FontAwesomeIcons.solidCircle,
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                size: 60.0,
-                              ),
-                              onPressed: () {
-                                print('IconButton pressed ...');
-                              },
-                            ),
+                            child: Obx(() => FlutterFlowIconButton(
+                                  borderColor: Color(0xFF69B884),
+                                  borderRadius: 100.0,
+                                  borderWidth: 10.0,
+                                  buttonSize: 95.0,
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.solidCircle,
+                                    color: habitController.getCustomColor(),
+                                    size: 60.0,
+                                  ),
+                                  onPressed: () {
+                                    Color selectedColor = Colors.blue;
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('Selecciona un color'),
+                                          content: SingleChildScrollView(
+                                            child: ColorPicker(
+                                              pickerColor: selectedColor,
+                                              onColorChanged: (Color color) {
+                                                setState(() {
+                                                  selectedColor = color;
+                                                });
+                                              },
+                                              pickerAreaHeightPercent: 0.8,
+                                            ),
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                              child: Text('Seleccionar'),
+                                              onPressed: () {
+                                                habitController.setCustomColor(
+                                                    selectedColor);
+                                                Navigator.of(context).pop();
+                                                // Aquí puedes utilizar el color seleccionado
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                )),
                           ),
                         ],
                       ),
@@ -264,10 +376,10 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(65.0, 10.0, 0.0, 0.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       'Meta',
@@ -286,134 +398,41 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 80.0,
-                    child: TextFormField(
-                      controller: _model.textController2,
-                      autofocus: true,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        hintStyle:
-                            FlutterFlowTheme.of(context).bodySmall.override(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF69B884),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.of(context).bodySmall.override(
-                            fontFamily: 'Nunito',
-                            color: Color(0xFF3C7E5B),
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.normal,
-                          ),
-                      validator:
-                          _model.textController2Validator.asValidator(context),
+                    height: 50.0,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFE2E9BA),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                        child: Text(
-                          'X',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFF3C7E5B),
-                                    fontSize: 35.0,
-                                  ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    width: 80.0,
-                    child: TextFormField(
-                      controller: _model.textController3,
-                      autofocus: true,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        hintStyle: FlutterFlowTheme.of(context).bodySmall,
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF69B884),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyLarge.override(
-                            fontFamily: 'Nunito',
-                            color: Color(0xFF3C7E5B),
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.normal,
-                          ),
-                      validator:
-                          _model.textController3Validator.asValidator(context),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                            icon: Icon(Icons.arrow_left),
+                            onPressed: () =>
+                                {habitController.decrementCounter()}),
+                        Obx(() => Text(
+                              '${habitController.goalCounter}',
+                              style: TextStyle(fontSize: 20.0),
+                            )),
+                        IconButton(
+                            icon: Icon(Icons.arrow_right),
+                            onPressed: () =>
+                                {habitController.incrementCounter()})
+                      ],
                     ),
-                  ),
+                  )
                 ],
               ),
               Row(
                 mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Align(
                     alignment: AlignmentDirectional(0.0, -0.8),
                     child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(110.0, 0.0, 0.0, 0.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 0.0, 0.0, 0.0),
                       child: Text(
-                        'veces',
+                        'veces al día',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'Nunito',
                               color: Color(0xFF3C7E5B),
@@ -450,93 +469,94 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                   Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      FFButtonWidget(
-                        onPressed: () {
-                          print('Button pressed ...');
-                        },
-                        text: 'Lun',
-                        options: FFButtonOptions(
-                          width: 110.0,
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF69B884),
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
+                      Obx(() => FFButtonWidget(
+                            onPressed: () {
+                              habitController.setInterval(0);
+                            },
+                            text: 'Lun',
+                            options: FFButtonOptions(
+                              width: 110.0,
+                              height: 40.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: habitController.btnColors[0],
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
                                     fontFamily: 'Poppins',
-                                    color: Colors.white,
+                                    color: Color.fromRGBO(60, 126, 91, 1),
                                   ),
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          )),
                       Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 10.0, 0.0, 0.0),
-                            child: FFButtonWidget(
-                              onPressed: () {
-                                print('Button pressed ...');
-                              },
-                              text: 'Miér',
-                              options: FFButtonOptions(
-                                width: 110.0,
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: Color(0xFF69B884),
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.white,
+                            child: Obx(() => FFButtonWidget(
+                                  onPressed: () {
+                                    habitController.setInterval(2);
+                                  },
+                                  text: 'Miér',
+                                  options: FFButtonOptions(
+                                    width: 110.0,
+                                    height: 40.0,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: habitController.btnColors[2],
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: Color.fromRGBO(60, 126, 91, 1),
+                                        ),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1.0,
                                     ),
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                )),
                           ),
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 10.0, 0.0, 0.0),
-                            child: FFButtonWidget(
-                              onPressed: () {
-                                print('Button pressed ...');
-                              },
-                              text: 'Viern',
-                              options: FFButtonOptions(
-                                width: 110.0,
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: Color(0xFF69B884),
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.white,
+                            child: Obx(() => FFButtonWidget(
+                                  onPressed: () {
+                                    habitController.setInterval(4);
+                                  },
+                                  text: 'Viern',
+                                  options: FFButtonOptions(
+                                    width: 110.0,
+                                    height: 40.0,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: habitController.btnColors[4],
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: Color.fromRGBO(60, 126, 91, 1),
+                                        ),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1.0,
                                     ),
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                )),
                           ),
                         ],
                       ),
@@ -548,91 +568,91 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
-                          },
-                          text: 'Mar',
-                          options: FFButtonOptions(
-                            width: 110.0,
-                            height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: Color(0xFF69B884),
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
+                        Obx(() => FFButtonWidget(
+                              onPressed: () {
+                                habitController.setInterval(1);
+                              },
+                              text: 'Mar',
+                              options: FFButtonOptions(
+                                width: 110.0,
+                                height: 40.0,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                color: habitController.btnColors[1],
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color: Color.fromRGBO(60, 126, 91, 1),
+                                    ),
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1.0,
                                 ),
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            )),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 10.0, 0.0, 0.0),
+                          child: Obx(() => FFButtonWidget(
+                                onPressed: () {
+                                  habitController.setInterval(3);
+                                },
+                                text: 'Jue',
+                                options: FFButtonOptions(
+                                  width: 110.0,
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: habitController.btnColors[3],
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Color.fromRGBO(60, 126, 91, 1),
+                                      ),
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              )),
                         ),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 10.0, 0.0, 0.0),
-                          child: FFButtonWidget(
-                            onPressed: () {
-                              print('Button pressed ...');
-                            },
-                            text: 'Jue',
-                            options: FFButtonOptions(
-                              width: 110.0,
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: Color(0xFF69B884),
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
+                          child: Obx(() => FFButtonWidget(
+                                onPressed: () {
+                                  habitController.setInterval(5);
+                                },
+                                text: 'Sáb',
+                                options: FFButtonOptions(
+                                  width: 110.0,
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: habitController.btnColors[5],
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Color.fromRGBO(60, 126, 91, 1),
+                                      ),
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1.0,
                                   ),
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 10.0, 0.0, 0.0),
-                          child: FFButtonWidget(
-                            onPressed: () {
-                              print('Button pressed ...');
-                            },
-                            text: 'Sáb',
-                            options: FFButtonOptions(
-                              width: 110.0,
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: Color(0xFF69B884),
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                  ),
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              )),
                         ),
                       ],
                     ),
@@ -646,31 +666,32 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                   Padding(
                     padding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                    child: FFButtonWidget(
-                      onPressed: () {
-                        print('Button pressed ...');
-                      },
-                      text: 'Dom',
-                      options: FFButtonOptions(
-                        width: 110.0,
-                        height: 40.0,
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: Color(0xFF69B884),
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
+                    child: Obx(() => FFButtonWidget(
+                          onPressed: () {
+                            habitController.setInterval(6);
+                          },
+                          text: 'Dom',
+                          options: FFButtonOptions(
+                            width: 110.0,
+                            height: 40.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: habitController.btnColors[6],
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
+                                .override(
                                   fontFamily: 'Poppins',
-                                  color: Colors.white,
+                                  color: Color.fromRGBO(60, 126, 91, 1),
                                 ),
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        )),
                   ),
                 ],
               ),
@@ -692,49 +713,52 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                   ],
                 ),
               ),
-              ListView(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
-                          },
-                          text: '9:00 AM',
-                          options: FFButtonOptions(
-                            width: 170.0,
-                            height: 45.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: Color(0xFF69B884),
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
-                                ),
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
+              Obx(() => ListView.builder(
+                  itemCount: habitController.reminders.length,
+                  itemBuilder: (context, index) {
+                    DateTime currentDateReminder =
+                        habitController.reminders[index];
+                    return Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FFButtonWidget(
+                            onPressed: () {
+                              print('Button pressed ...');
+                            },
+                            text:
+                                "${DateFormat.jm().format(currentDateReminder)}",
+                            options: FFButtonOptions(
+                              width: 170.0,
+                              height: 45.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: Color.fromRGBO(226, 233, 186, 1),
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: Color.fromRGBO(60, 126, 91, 1),
+                                  ),
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                        ],
+                      ),
+                    );
+                  },
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical)),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
                 child: Row(
@@ -743,7 +767,7 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                   children: [
                     FFButtonWidget(
                       onPressed: () {
-                        print('Button pressed ...');
+                        _showTimePicker();
                       },
                       text: '',
                       icon: Icon(
@@ -757,7 +781,7 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         iconPadding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: Color(0xFF3C7E5B),
+                        color: Color.fromRGBO(105, 184, 132, 1),
                         textStyle:
                             FlutterFlowTheme.of(context).titleSmall.override(
                                   fontFamily: 'Poppins',
@@ -784,16 +808,41 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 20.0),
                       child: FFButtonWidget(
                         onPressed: () async {
-                          context.pushNamed(
-                            'HomePage',
-                            extra: <String, dynamic>{
-                              kTransitionInfoKey: TransitionInfo(
-                                hasTransition: true,
-                                transitionType: PageTransitionType.leftToRight,
-                                duration: Duration(milliseconds: 350),
-                              ),
-                            },
-                          );
+                          String text = _textEditingController.text;
+                          if (text.isNotEmpty && text.trim().isNotEmpty) {
+                            habitController.saveHabit();
+                            habitController.resetToInitialStates();
+                            context.pushNamed(
+                              'HomePage',
+                              extra: <String, dynamic>{
+                                kTransitionInfoKey: TransitionInfo(
+                                  hasTransition: true,
+                                  transitionType:
+                                      PageTransitionType.leftToRight,
+                                  duration: Duration(milliseconds: 350),
+                                ),
+                              },
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Información incompleta'),
+                                  content: Text(
+                                      'Por favor, complete la información requerida.'),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('Aceptar'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         },
                         text: 'Añadir',
                         options: FFButtonOptions(
