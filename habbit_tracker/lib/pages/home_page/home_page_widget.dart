@@ -1,3 +1,4 @@
+import '../../services/notification.services.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -155,6 +156,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
                     child: FFButtonWidget(
                       onPressed: () {
+                        mostrarNotificacion();
                         print('Button pressed ...');
                       },
                       text: 'Diario',

@@ -7,7 +7,7 @@ class HabitDataController extends GetxController {
 
   addHabit(Habit newHabit) {
     print(
-        " Pruebaa de habito en dataController: ${newHabit.name} ${newHabit.color} ${newHabit.icon} ${newHabit.reminders[0]} ${newHabit.initDate.day.toString()} ${newHabit.goal} ");
+        " Pruebaa de habito en dataController: ${newHabit.name} ${newHabit.color} ${newHabit.icon} ${newHabit.reminders[0]} ${newHabit.initDate.day.toString()} ${newHabit.goal} ${newHabit.intervalOfDays} ");
     myHabits.add(newHabit);
   }
 
