@@ -6,6 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'perfil_model.dart';
 export 'perfil_model.dart';
+import 'package:flutter/material.dart';
+import 'package:habbit_tracker/pages/signin/signin_controller.dart';
+import 'package:habbit_tracker/pages/signin/usuarios_model.dart';
+import 'package:get/get.dart';
+import 'package:habbit_tracker/pages/perfil/perfil_controller.dart';
 
 class PerfilWidget extends StatefulWidget {
   const PerfilWidget({Key? key}) : super(key: key);
@@ -16,7 +21,7 @@ class PerfilWidget extends StatefulWidget {
 
 class _PerfilWidgetState extends State<PerfilWidget> {
   late PerfilModel _model;
-
+  final signin_controller _signinController = Get.find();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
 
@@ -36,6 +41,11 @@ class _PerfilWidgetState extends State<PerfilWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (_signinController.currentUser == null) {
+      return Center(child: Text('No hay usuario autenticado'));
+    }
+    final usuario_model currentUser = _signinController.currentUser!;
+    final UserProfile? userProfile = currentUser.userProfile;
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
       child: Scaffold(
@@ -272,7 +282,7 @@ class _PerfilWidgetState extends State<PerfilWidget> {
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(24.27, 17.16, 0.0, 0.0),
                 child: Text(
-                  'Abby Toss',
+                  userProfile?.name ?? "Nombre no disponible",
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'Nunito',
                         color: Color(0xFF3C7E5B),
@@ -289,7 +299,7 @@ class _PerfilWidgetState extends State<PerfilWidget> {
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(24.27, 4.0, 0.0, 0.0),
                 child: Text(
-                  '@abby_la_sapa  ',
+                  currentUser.user,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'Nunito',
                         color: Color(0xFF3C7E5B),
@@ -304,7 +314,7 @@ class _PerfilWidgetState extends State<PerfilWidget> {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.31, 22.0, 0.0),
               child: Text(
-                'Actualmente soy una estudiante de diseño digital, me desempeño en el manejo de herramientas como Adobe Photoshop, Adobe Illustrator y After Effects.\n',
+                userProfile?.bio ?? 'Biografía no disponible',
                 textAlign: TextAlign.start,
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Nunito',

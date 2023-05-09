@@ -6,19 +6,18 @@ import 'package:habbit_tracker/pages/login/login_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:habbit_tracker/pages/perfil/perfil_controller.dart';
 
 class usuario_model {
-  ///  State fields for stateful widgets in this page.
-
   late String user;
   late String pasw;
+  UserProfile? userProfile;
 
   usuario_model({
     required this.user,
     required this.pasw,
+    this.userProfile,
   });
 
-  bool get isNotEmpty => true;
-
-  /// Additional helper methods are added here.
+  // Métodos adicionales para la actualización y eliminación del perfil del usuario.
 }

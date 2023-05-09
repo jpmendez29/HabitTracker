@@ -191,7 +191,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                         controller: _model.textController1,
                         obscureText: false,
                         decoration: InputDecoration(
-                          labelText: 'Your email address',
+                          labelText: 'Your username',
                           labelStyle: FlutterFlowTheme.of(context).bodySmall,
                           hintStyle: FlutterFlowTheme.of(context).bodySmall,
                           enabledBorder: OutlineInputBorder(
