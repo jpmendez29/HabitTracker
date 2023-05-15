@@ -327,28 +327,16 @@ class _LoginWidgetState extends State<LoginWidget> {
                       if (pasw.isNotEmpty &&
                           usr.isNotEmpty &&
                           signincontroller.exist(usr, pasw)) {
-                        await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                                content: Text("Sesion iniciada correctamente"),
-                                actions: [
-                                  TextButton(
-                                    key: Key('Textdialog'),
-                                    onPressed: () =>
-                                        Navigator.pop(context), // passing false
-                                    child: Text('ok'),
-                                  )
-                                ]);
-                          },
-                        );
                         prefscontroller.storeUserInfo(usr, pasw);
-
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePageWidget(),
-                          ),
+                        context.pushNamed(
+                          'HomePage',
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 350),
+                            ),
+                          },
                         );
                       } else {
                         await showDialog(
@@ -356,7 +344,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           builder: (context) {
                             return AlertDialog(
                                 content: Text(
-                                    "Error al inicir sesion,verificar los datos e intente nuevamente"),
+                                    "Error al iniciar sesion,verificar los datos e intente nuevamente"),
                                 actions: [
                                   TextButton(
                                     onPressed: () =>
