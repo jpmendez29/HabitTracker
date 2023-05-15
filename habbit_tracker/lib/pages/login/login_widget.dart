@@ -320,6 +320,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: () async {
+                      signin_controller signincontroller =
+                          Get.find<signin_controller>();
                       String pasw = _model.textController2.text;
                       String usr = _model.textController1.text;
                       if (pasw.isNotEmpty &&

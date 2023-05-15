@@ -15,10 +15,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
+import 'package:habbit_tracker/pages/signin/signin_controller.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterFlowTheme.initialize();
   await initNotifications();
+  Get.put(signin_controller());
   Get.put(HabitDataController());
   Get.put(HabitController(new addHabit()));
   Get.put(HomePageController(habitUseCase: new addHabit()));
