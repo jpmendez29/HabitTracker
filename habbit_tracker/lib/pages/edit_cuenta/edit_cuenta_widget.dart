@@ -28,12 +28,13 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => EditCuentaModel());
-
-    _model.textController1 ??= TextEditingController();
-    _model.textController2 ??= TextEditingController();
-    _model.textController3 ??= TextEditingController();
-    _model.textController4 ??= TextEditingController();
-    _model.textController5 ??= TextEditingController();
+    final signInController = Get.find<signin_controller>();
+    String name = signInController.currentUser?.userProfile?.name ??
+        'Nombre no disponible';
+    String biography = signInController.currentUser?.userProfile?.bio ??
+        'Nombre no disponible';
+    _model.textController1 ??= TextEditingController(text: name);
+    _model.textController2 ??= TextEditingController(text: biography);
   }
 
   @override
@@ -46,9 +47,6 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_signinController.currentUser == null) {
-      return Center(child: Text('No hay usuario autenticado'));
-    }
     final usuario_model currentUser = _signinController.currentUser!;
     final UserProfile? userProfile = currentUser.userProfile;
     return GestureDetector(
@@ -61,7 +59,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
           automaticallyImplyLeading: true,
           actions: [],
           centerTitle: true,
-          elevation: 4.0,
+          elevation: 4,
         ),
         body: SafeArea(
           child: Column(
@@ -69,44 +67,19 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Align(
-                alignment: AlignmentDirectional(-0.8, 0.0),
+                alignment: AlignmentDirectional(-0.8, 0),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
                   child: Text(
                     'Mi cuenta',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Nunito',
                           color: Color(0xFF3C7E5B),
-                          fontSize: 22.0,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          lineHeight: 1.0,
+                          lineHeight: 1,
                         ),
                   ),
-                ),
-              ),
-              Container(
-                width: 120.0,
-                height: 120.0,
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: Image.network(
-                  'https://picsum.photos/id/64/200/300',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                child: Text(
-                  'Editar foto de perfil',
-                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily: 'Nunito',
-                        color: Color(0xFF3C7E5B),
-                        fontSize: 17.0,
-                        fontWeight: FontWeight.w600,
-                        lineHeight: 1.0,
-                      ),
                 ),
               ),
               Row(
@@ -119,32 +92,31 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Nunito',
                           color: Color(0xFF69B884),
-                          fontSize: 16.0,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          lineHeight: 1.0,
+                          lineHeight: 1,
                         ),
                   ),
                   Container(
-                    width: 200.0,
-                    height: 40.0,
+                    width: 200,
+                    height: 40,
                     decoration: BoxDecoration(),
                     child: TextFormField(
                       controller: _model.textController1,
                       autofocus: true,
                       obscureText: false,
                       decoration: InputDecoration(
-                        hintText: userProfile?.name ?? 'Nombre no disponible',
                         hintStyle:
                             FlutterFlowTheme.of(context).bodySmall.override(
                                   fontFamily: 'Nunito',
                                   color: Color(0xFF3C7E5B),
-                                  fontSize: 16.0,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
-                            width: 1.0,
+                            width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -154,7 +126,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
-                            width: 1.0,
+                            width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -164,7 +136,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                         errorBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
-                            width: 1.0,
+                            width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -174,7 +146,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                         focusedErrorBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
-                            width: 1.0,
+                            width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -199,36 +171,36 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Nombre de usuario',
+                    'Biografia',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Nunito',
                           color: Color(0xFF69B884),
-                          fontSize: 16.0,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          lineHeight: 1.0,
+                          lineHeight: 1,
                         ),
                   ),
                   Container(
-                    width: 200.0,
-                    height: 40.0,
+                    width: 200,
                     decoration: BoxDecoration(),
                     child: TextFormField(
                       controller: _model.textController2,
                       autofocus: true,
                       obscureText: false,
                       decoration: InputDecoration(
-                        hintText: currentUser.user,
+                        hintText:
+                            'Actualmente soy una estudiante de diseño digital, me desempeño en el manejo de herramientas como Adobe Photoshop, Adobe Illustrator y After Effects.\n',
                         hintStyle:
                             FlutterFlowTheme.of(context).bodySmall.override(
                                   fontFamily: 'Nunito',
                                   color: Color(0xFF3C7E5B),
-                                  fontSize: 16.0,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
-                            width: 1.0,
+                            width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -238,7 +210,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
-                            width: 1.0,
+                            width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -248,7 +220,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                         errorBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
-                            width: 1.0,
+                            width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -258,90 +230,7 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                         focusedErrorBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Nunito',
-                            color: Color(0xFF3C7E5B),
-                          ),
-                      maxLines: null,
-                      validator:
-                          _model.textController2Validator.asValidator(context),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Biografia',
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Nunito',
-                          color: Color(0xFF69B884),
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                          lineHeight: 1.0,
-                        ),
-                  ),
-                  Container(
-                    width: 200.0,
-                    decoration: BoxDecoration(),
-                    child: TextFormField(
-                      controller: _model.textController3,
-                      autofocus: true,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        hintText: userProfile?.bio ?? 'Biografía no disponible',
-                        hintStyle:
-                            FlutterFlowTheme.of(context).bodySmall.override(
-                                  fontFamily: 'Nunito',
-                                  color: Color(0xFF3C7E5B),
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        errorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedErrorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
+                            width: 1,
                           ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4.0),
@@ -355,133 +244,29 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                           ),
                       maxLines: 7,
                       validator:
-                          _model.textController3Validator.asValidator(context),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Correo electronico',
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Nunito',
-                          color: Color(0xFF69B884),
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                          lineHeight: 1.0,
-                        ),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Fecha de nacimiento',
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Nunito',
-                          color: Color(0xFF69B884),
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                          lineHeight: 1.0,
-                        ),
-                  ),
-                  Container(
-                    width: 200.0,
-                    height: 20.0,
-                    decoration: BoxDecoration(),
-                    child: TextFormField(
-                      controller: _model.textController5,
-                      autofocus: true,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        hintText: '20/02/2023',
-                        hintStyle:
-                            FlutterFlowTheme.of(context).bodySmall.override(
-                                  fontFamily: 'Nunito',
-                                  color: Color(0xFF3C7E5B),
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        errorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedErrorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1.0,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Nunito',
-                            color: Color(0xFF3C7E5B),
-                          ),
-                      maxLines: null,
-                      validator:
-                          _model.textController5Validator.asValidator(context),
+                          _model.textController2Validator.asValidator(context),
                     ),
                   ),
                 ],
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () {
                     final signinController = Get.find<signin_controller>();
                     signinController.updateUserProfile(
-                        _model.textController1.text, // Nombre actualizado
-                        _model.textController2.text, // Nombre de usuario
-                        currentUser!.userProfile!.birthdate,
-                        "" // Biografía actualizada
-                        );
+                      _model.textController1.text, // Nombre actualizado
+                      _model.textController2.text, // biography
+                    );
                     // Navega hacia atrás o redirige al usuario a la pantalla anterior si es necesario
-                    context.pushNamed('perfil_widget');
+                    context.pop();
                   },
                   text: 'Confirmar Cambios',
                   options: FFButtonOptions(
-                    width: 130.0,
-                    height: 40.0,
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    width: 130,
+                    height: 40,
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                    iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                     color: Color(0xFF3C7E5B),
                     textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                           fontFamily: 'Poppins',
@@ -489,9 +274,9 @@ class _EditCuentaWidgetState extends State<EditCuentaWidget> {
                         ),
                     borderSide: BorderSide(
                       color: Colors.transparent,
-                      width: 1.0,
+                      width: 1,
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),

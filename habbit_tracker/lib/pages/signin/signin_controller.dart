@@ -13,8 +13,6 @@ class signin_controller extends GetxController {
         name: 'David Maldonado',
         bio:
             'Ingeniero de sistemas buscando cumplir sus metas de habitos saludables',
-        birthdate: DateTime.now(),
-        imageUrl: 'https://example.com/default-image.png',
       ),
     ),
   ].obs;
@@ -37,8 +35,6 @@ class signin_controller extends GetxController {
       id: usuarios.last.user,
       name: '',
       bio: '',
-      birthdate: DateTime.now(),
-      imageUrl: '',
     );
     return true;
   }
@@ -57,15 +53,12 @@ class signin_controller extends GetxController {
   }
 
   // Método para actualizar el perfil del usuario actual
-  void updateUserProfile(
-      String name, String bio, DateTime birthdate, String imageUrl) {
+  void updateUserProfile(String name, String bio) {
     if (currentUser != null && currentUser!.userProfile != null) {
       UserProfile updatedProfile = UserProfile(
         id: currentUser!.userProfile!.id,
         name: name,
         bio: bio,
-        birthdate: birthdate,
-        imageUrl: imageUrl,
       );
       currentUser!.updateUserProfile(updatedProfile);
       update();
