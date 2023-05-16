@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -23,9 +25,11 @@ class HomePageController extends GetxController {
   RxInt counterIndex = 0.obs;
   late List<List<Habit>> showingList;
   HomePageController({required this.habitUseCase});
+  RxInt aaa = 0.obs;
 
   List<Habit> sortListByDay(int indexOfDay) {
     List<Habit> finalList = <Habit>[];
+    log('este es el error:');
     listOfHabits.forEach((habit) {
       if (habit.intervalOfDays[indexOfDay]) finalList.add(habit);
     });
@@ -89,7 +93,6 @@ class HomePageController extends GetxController {
                                   title: Text(task),
                                   value: false,
                                   onChanged: (bool? value) {
-                                    // Lógica para cambiar el estado de la tarea
                                   },
                                 );
                               },

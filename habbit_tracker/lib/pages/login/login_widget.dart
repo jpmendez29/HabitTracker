@@ -1,3 +1,8 @@
+import 'dart:developer';
+
+import 'package:habbit_tracker/data/habitDataController.dart';
+
+import '../../controllers/authentication_controller.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -23,6 +28,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   final login_controller logincontroller = Get.put(login_controller());
   final signin_controller signincontroller = Get.put(signin_controller());
   final prefs_controller prefscontroller = Get.put(prefs_controller());
+  final AuthenticationController authenticationController = Get.find();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -320,14 +326,18 @@ class _LoginWidgetState extends State<LoginWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: () async {
+                      HabitDataController habitDataController = Get.find();
                       signin_controller signincontroller =
                           Get.find<signin_controller>();
                       String pasw = _model.textController2.text;
                       String usr = _model.textController1.text;
-                      if (pasw.isNotEmpty &&
+                      if (true == await authenticationController.login(usr,pasw)/* pasw.isNotEmpty &&
                           usr.isNotEmpty &&
-                          signincontroller.exist(usr, pasw)) {
+                          signincontroller.exist(usr, pasw) */) {
                         prefscontroller.storeUserInfo(usr, pasw);
+                        log('${authenticationController.login(usr,pasw)}');
+                        
+                        await habitDataController.inithabits();
                         context.pushNamed(
                           'HomePage',
                           extra: <String, dynamic>{

@@ -8,6 +8,7 @@ export 'signin_model.dart';
 import 'package:get/get.dart';
 import 'package:habbit_tracker/pages/login/login_widget.dart';
 import 'dart:developer';
+import '../../controllers/authentication_controller.dart';
 
 class SigninWidget extends StatefulWidget {
   const SigninWidget({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class SigninWidget extends StatefulWidget {
 
 class _SigninWidgetState extends State<SigninWidget> {
   late signin_controller usc = Get.find<signin_controller>();
+  final AuthenticationController authenticationController = Get.find();
 
   late SigninModel _model;
 
@@ -314,7 +316,9 @@ class _SigninWidgetState extends State<SigninWidget> {
                     if (usc.validatepasw(usr, pasw) &&
                         pasw.isNotEmpty &&
                         usr.isNotEmpty) {
+                          
                       log(usc.usr());
+                      await authenticationController.signup(usr, pasw);
                       await showDialog(
                         context: context,
                         builder: (context) {

@@ -36,6 +36,8 @@ Future<void> initNotifications() async{
 Future<void> mostrarNotificacion() async {
   await scheduleWeeklyNotification(habitDataController.myHabits[0]);
   
+
+  //habitDataController.myHabits.map((e) async => await scheduleWeeklyNotification(e));
   /*  const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails('channel id', 'your_channel_Name', color: Color(0xFF69B884) );
 
   const  NotificationDetails notificationDetails = NotificationDetails(
