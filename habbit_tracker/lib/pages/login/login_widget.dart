@@ -331,9 +331,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                           Get.find<signin_controller>();
                       String pasw = _model.textController2.text;
                       String usr = _model.textController1.text;
-                      if (true == await authenticationController.login(usr,pasw)/* pasw.isNotEmpty &&
+                      if (/* true == await authenticationController.login(usr,pasw) */pasw.isNotEmpty &&
                           usr.isNotEmpty &&
-                          signincontroller.exist(usr, pasw) */) {
+                          signincontroller.exist(usr, pasw)) {
+                           // signincontroller.exist(usr, pasw);
                         prefscontroller.storeUserInfo(usr, pasw);
                         log('${authenticationController.login(usr,pasw)}');
                         
