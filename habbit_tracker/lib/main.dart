@@ -8,6 +8,9 @@ import 'package:habbit_tracker/domain/use_cases/addHabit.dart';
 import 'package:habbit_tracker/pages/add_habit/controllers/habitController.dart';
 import 'package:habbit_tracker/pages/home_page/controllers/homePageController.dart';
 import 'package:habbit_tracker/services/notification.services.dart';
+import 'Controllers/user_controller.dart';
+import 'config/configuration.dart';
+import 'controllers/authentication_controller.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
@@ -17,14 +20,33 @@ import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
 import 'package:habbit_tracker/pages/signin/signin_controller.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterFlowTheme.initialize();
   await initNotifications();
-  Get.put(signin_controller());
+  await Firebase.initializeApp(
+      name: 'HabbitTracker',
+        options: const FirebaseOptions(
+          apiKey: Configuration.apiKey,
+          authDomain: Configuration.authDomain,
+          databaseURL: Configuration.databaseURL,
+          projectId: Configuration.projectId,
+          // storageBucket: Configuration.storageBucket,
+          messagingSenderId: Configuration.messagingSenderId,
+          appId: Configuration.appId,
+          // measurementId: Configuration.measurementId),
+  ));
+
+  Get.put(UserController());
+  Get.put(AuthenticationController());
   Get.put(HabitDataController());
-  Get.put(HabitController(new addHabit()));
+  Get.put(signin_controller());
   Get.put(HomePageController(habitUseCase: new addHabit()));
+  Get.put(HabitController(new addHabit()));
+
+  
   runApp(MyApp());
 }
 
@@ -32,6 +54,7 @@ class MyApp extends StatefulWidget {
   // This widget is the root of your application.
   @override
   State<MyApp> createState() => _MyAppState();
+  
 
   static _MyAppState of(BuildContext context) =>
       context.findAncestorStateOfType<_MyAppState>()!;

@@ -1,9 +1,16 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:habbit_tracker/pages/signin/usuarios_model.dart';
 import 'package:habbit_tracker/pages/perfil/perfil_controller.dart';
 
+
+
+
+
 class signin_controller extends GetxController {
+
   late final List<usuario_model> usuarios = <usuario_model>[
     usuario_model(
       user: "hola123",
@@ -13,11 +20,13 @@ class signin_controller extends GetxController {
         name: 'David Maldonado',
         bio:
             'Ingeniero de sistemas buscando cumplir sus metas de habitos saludables',
+        birthdate: DateTime.now(),
+        imageUrl: 'https://example.com/default-image.png',
       ),
     ),
   ].obs;
 
-  void setuser(us, pasw) => {
+  Future<void> setuser(us, pasw) async => {
         usuarios.add(usuario_model(user: us, pasw: pasw, userProfile: null)),
       };
 
@@ -35,6 +44,8 @@ class signin_controller extends GetxController {
       id: usuarios.last.user,
       name: '',
       bio: '',
+      birthdate: DateTime.now(),
+      imageUrl: '',
     );
     return true;
   }
@@ -53,12 +64,15 @@ class signin_controller extends GetxController {
   }
 
   // Método para actualizar el perfil del usuario actual
-  void updateUserProfile(String name, String bio) {
+  void updateUserProfile(
+      String name, String bio, DateTime birthdate, String imageUrl) {
     if (currentUser != null && currentUser!.userProfile != null) {
       UserProfile updatedProfile = UserProfile(
         id: currentUser!.userProfile!.id,
         name: name,
         bio: bio,
+        birthdate: birthdate,
+        imageUrl: imageUrl,
       );
       currentUser!.updateUserProfile(updatedProfile);
       update();

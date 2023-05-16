@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "746636755551",
+    "firebase_url": "https://habbittracker-6c54b-default-rtdb.firebaseio.com",
+    "project_id": "habbittracker-6c54b",
+    "storage_bucket": "habbittracker-6c54b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746636755551:android:eaab232526f2992b13d1ea",
+        "android_client_info": {
+          "package_name": "com.habbittracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746636755551-411oukmgjhp6i03ng0pg9lt205v756l9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvFvfJ5FrmQvSDYOm1hdRU8Q5gsHUJM0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746636755551-411oukmgjhp6i03ng0pg9lt205v756l9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

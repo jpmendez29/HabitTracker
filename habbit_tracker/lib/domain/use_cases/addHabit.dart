@@ -1,10 +1,17 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
-import 'package:habbit_tracker/data/habitDataController.dart';
+
+
 import 'package:habbit_tracker/domain/entities/Habit.dart';
+
+import '../../data/habitDataController.dart';
+
+
 
 class addHabit {
   // Habit habit;
-  HabitDataController dataController = Get.find();
+  final HabitDataController dataController = Get.find();
   saveHabit(Habit newHabit) {
     dataController.addHabit(newHabit);
   }
